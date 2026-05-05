@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Healthcare Appointment System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center py-10">
+
+    <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-6 text-center">
+            <h1 class="text-3xl font-bold">Smart Healthcare System</h1>
+            <p class="text-blue-200 mt-2">OOP Web Implementation</p>
+        </div>
+
+        <!-- Navigation / Menu -->
+        <div class="flex flex-wrap border-b border-gray-200 bg-gray-50">
+            <button onclick="showTab('addDoctor')" class="flex-1 py-4 font-semibold text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition">1. Add Doctor</button>
+            <button onclick="showTab('addPatient')" class="flex-1 py-4 font-semibold text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition">2. Add Patient</button>
+            <button onclick="showTab('bookApp')" class="flex-1 py-4 font-semibold text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition">3. Book Appointment</button>
+            <button onclick="showTab('viewRecords')" class="flex-1 py-4 font-semibold text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition">4. Show Records</button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="p-8">
+            
+            <!-- Message Box (For Success/Errors) -->
+            <div id="msgBox" class="hidden mb-6 p-4 rounded-lg font-bold text-center"></div>
+
+            <!-- Tab 1: Add Doctor -->
+            <div id="addDoctor" class="tab-content">
+                <h2 class="text-2xl font-bold mb-4 text-blue-600">Register New Doctor</h2>
+                <form onsubmit="handleAddDoctor(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Doctor Name</label>
+                        <input type="text" id="docName" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Doctor ID</label>
+                        <input type="number" id="docId" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Specialization</label>
+                        <input type="text" id="docSpec" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition">Add Doctor</button>
+                </form>
+            </div>
+
+            <!-- Tab 2: Add Patient -->
+            <div id="addPatient" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-blue-600">Register New Patient</h2>
+                <form onsubmit="handleAddPatient(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Patient Name</label>
+                        <input type="text" id="patName" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Patient ID</label>
+                        <input type="number" id="patId" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Disease / Issue</label>
+                        <input type="text" id="patDisease" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition">Add Patient</button>
+                </form>
+            </div>
+
+            <!-- Tab 3: Book Appointment -->
+            <div id="bookApp" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-blue-600">Book Appointment</h2>
+                <form onsubmit="handleBookAppointment(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Patient ID</label>
+                        <input type="number" id="appPatId" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Doctor ID</label>
+                        <input type="number" id="appDocId" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Time (e.g., 10AM)</label>
+                        <input type="text" id="appTime" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <button type="submit" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition">Confirm Booking</button>
+                </form>
+            </div>
+
+            <!-- Tab 4: View Records -->
+            <div id="viewRecords" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-blue-600">System Records</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Doctors List -->
+                    <div class="bg-slate-100 p-4 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-lg border-b pb-2 mb-2 text-slate-700">Doctors List</h3>
+                        <ul id="doctorsList" class="space-y-2 text-sm text-slate-600">
+                            <li>No doctors registered yet.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Patients List -->
+                    <div class="bg-slate-100 p-4 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-lg border-b pb-2 mb-2 text-slate-700">Patients List</h3>
+                        <ul id="patientsList" class="space-y-2 text-sm text-slate-600">
+                            <li>No patients registered yet.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Appointments List -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 class="font-bold text-lg border-b border-blue-200 pb-2 mb-2 text-blue-800">Appointments Schedule</h3>
+                    <ul id="appointmentsList" class="space-y-2 text-sm text-blue-900">
+                        <li>No appointments booked yet.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- OOP IMPLEMENTATION IN JAVASCRIPT ---
+        
+        // 1. BASE CLASS
+        class Person {
+            constructor(name, id) {
+                this.name = name;
+                this.id = id;
+            }
+            showDetails() {
+                return `ID: ${this.id} | Name: ${this.name}`;
+            }
+        }
+
+        // 2. DERIVED CLASS - DOCTOR
+        class Doctor extends Person {
+            constructor(name, id, specialization) {
+                super(name, id);
+                this.specialization = specialization;
+            }
+            // Polymorphism: Method Overriding
+            showDetails() {
+                return `Doctor ID: ${this.id} | Name: Dr. ${this.name} | Spec: ${this.specialization}`;
+            }
+        }
+
+        // 3. DERIVED CLASS - PATIENT
+        class Patient extends Person {
+            constructor(name, id, disease) {
+                super(name, id);
+                this.disease = disease;
+            }
+            // Polymorphism: Method Overriding
+            showDetails() {
+                return `Patient ID: ${this.id} | Name: ${this.name} | Disease: ${this.disease}`;
+            }
+        }
+
+        // 4. APPOINTMENT CLASS
+        class Appointment {
+            constructor(patientId, doctorId, time) {
+                this.patientId = patientId;
+                this.doctorId = doctorId;
+                this.time = time;
+            }
+        }
+
+        // --- DATA STORAGE ARRAYS ---
+        const doctors = [];
+        const patients = [];
+        const appointments = [];
+
+        // --- UI FUNCTIONS ---
+
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            // Hide message box on tab switch
+            document.getElementById('msgBox').classList.add('hidden');
+            // Show selected tab
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            if(tabId === 'viewRecords') {
+                updateRecordsView();
+            }
+        }
+
+        function showMessage(msg, isError = false) {
+            const box = document.getElementById('msgBox');
+            box.textContent = msg;
+            box.className = `mb-6 p-4 rounded-lg font-bold text-center block ${isError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'}`;
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3000);
+        }
+
+        // --- LOGIC FUNCTIONS ---
+
+        function handleAddDoctor(e) {
+            e.preventDefault();
+            const name = document.getElementById('docName').value;
+            const id = document.getElementById('docId').value;
+            const spec = document.getElementById('docSpec').value;
+
+            // Instantiate new Doctor object
+            const newDoc = new Doctor(name, id, spec);
+            doctors.push(newDoc);
+
+            showMessage("Doctor Added Successfully!");
+            e.target.reset(); // Clear form
+        }
+
+        function handleAddPatient(e) {
+            e.preventDefault();
+            const name = document.getElementById('patName').value;
+            const id = document.getElementById('patId').value;
+            const disease = document.getElementById('patDisease').value;
+
+            // Instantiate new Patient object
+            const newPat = new Patient(name, id, disease);
+            patients.push(newPat);
+
+            showMessage("Patient Added Successfully!");
+            e.target.reset(); // Clear form
+        }
+
+        function handleBookAppointment(e) {
+            e.preventDefault();
+            const pId = document.getElementById('appPatId').value;
+            const dId = document.getElementById('appDocId').value;
+            const time = document.getElementById('appTime').value;
+
+            // SMART LOGIC: Check for double booking (O(N) search)
+            let isBooked = false;
+            for (let i = 0; i < appointments.length; i++) {
+                if (appointments[i].doctorId === dId && appointments[i].time === time) {
+                    isBooked = true;
+                    break;
+                }
+            }
+
+            if (isBooked) {
+                showMessage("Error: Doctor is already busy at this time!", true);
+            } else {
+                const newApp = new Appointment(pId, dId, time);
+                appointments.push(newApp);
+                showMessage("Appointment Booked Successfully!");
+                e.target.reset(); // Clear form
+            }
+        }
+
+        function updateRecordsView() {
+            // Update Doctors
+            const docList = document.getElementById('doctorsList');
+            if (doctors.length === 0) {
+                docList.innerHTML = '<li>No doctors registered yet.</li>';
+            } else {
+                docList.innerHTML = doctors.map(doc => `<li class="p-2 bg-white rounded border border-gray-100 shadow-sm">${doc.showDetails()}</li>`).join('');
+            }
+
+            // Update Patients
+            const patList = document.getElementById('patientsList');
+            if (patients.length === 0) {
+                patList.innerHTML = '<li>No patients registered yet.</li>';
+            } else {
+                patList.innerHTML = patients.map(pat => `<li class="p-2 bg-white rounded border border-gray-100 shadow-sm">${pat.showDetails()}</li>`).join('');
+            }
+
+            // Update Appointments
+            const appList = document.getElementById('appointmentsList');
+            if (appointments.length === 0) {
+                appList.innerHTML = '<li>No appointments booked yet.</li>';
+            } else {
+                appList.innerHTML = appointments.map(app => 
+                    `<li class="p-3 bg-white rounded border border-blue-100 shadow-sm font-medium">
+                        Patient ID <span class="text-blue-600">${app.patientId}</span> 
+                        &rarr; Doctor ID <span class="text-blue-600">${app.doctorId}</span> 
+                        at <span class="bg-blue-100 px-2 py-1 rounded text-blue-800">${app.time}</span>
+                    </li>`
+                ).join('');
+            }
+        }
+    </script>
+</body>
+</html>
